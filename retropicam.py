@@ -13,6 +13,7 @@ length = 8
 resolution = "640, 480"
 
 #Twython setup
+### You will need to setup a twitter app on twitter.com and get the authentication details to make this work
 import sys
 from twython import Twython
 CONSUMER_KEY = 'xxx'
