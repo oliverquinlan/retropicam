@@ -16,10 +16,15 @@ resolution = "640, 480"
 ### You will need to setup a twitter app on twitter.com and get the authentication details to make this work
 import sys
 from twython import Twython
-CONSUMER_KEY = 'xxx'
-CONSUMER_SECRET = 'xxx'
-ACCESS_KEY = 'xxx'
-ACCESS_SECRET = 'xxx'
+
+file = open("/home/pi/retropicam/auths/CONSUMER_KEY.txt","r")
+CONSUMER_KEY = file.read()
+file = open("/home/pi/retropicam/auths/CONSUMER_SECRET.txt","r")
+CONSUMER_SECRET = file.read()
+file = open("/home/pi/retropicam/auths/ACCESS_KEY.txt","r")
+ACCESS_KEY = file.read()
+file = open("/home/pi/retropicam/auths/ACCESS_SECRET.txt","r")
+ACCESS_SECRET = file.read()
 api = Twython(CONSUMER_KEY,CONSUMER_SECRET,ACCESS_KEY,ACCESS_SECRET)
 
 #setup ins and outs
