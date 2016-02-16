@@ -54,7 +54,8 @@ while True:
         camera.resolution = (320, 240)
         for num in range (length):
           camera.capture(filename+"-"+str(num)+".jpg")      
-        #User feedback
+        camera.close()
+	#User feedback
         print("Photos Taken")
         led.off()
         bz.off()
@@ -78,4 +79,4 @@ while True:
         #User Feedback
         led.on()
         bz.off()
-	print("Ready to take pictures")
+	sleep(0.05)
