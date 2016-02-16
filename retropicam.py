@@ -43,13 +43,13 @@ while True:
         #User feedback
         led.blink(0.05,0.05)
         bz.beep(on_time=0.1,off_time=0.1)
-        print("Button pressed, taking "+length+" photos...")
+        print("Button pressed, taking photos...")
         #Take photos
         filename = "/home/pi/retropicam/photos/image"+"-"+str(datetime.now()) 
         #Take high res photo
         camera = PiCamera()
         camera.resolution = (1280, 960)
-        camera.capture("/home/pi/retropicam/photos/archive/"+filename+".jpg")
+        camera.capture(filename+".jpg")
         #Take gif photos
         camera.resolution = (320, 240)
         for num in range (length):
@@ -76,6 +76,6 @@ while True:
         bz.off()
     else:
         #User Feedback
-        print("Ready to take pictures")
         led.on()
         bz.off()
+	print("Ready to take pictures")
