@@ -40,7 +40,8 @@ while True:
         bz.beep(on_time=0.1,off_time=0.1)
         print("Button pressed, taking photos...")
         #Take photos
-        filename = "/home/pi/retropicam/photos/image"+"-"+str(datetime.now()) 
+	filename = "/home/pi/retropicam/photos/photo"
+	#filename = "/home/pi/retropicam/photos/image"+"-"+str(datetime.now()) 
         #Take gif photos
         for num in range (length):
           takephoto = "fswebcam -r "+resolution+" --no-banner"+" "+filename+"-"+str(num)+".jpg"
@@ -65,6 +66,8 @@ while True:
         bz.on()
         sleep(0.5)
         bz.off()
+        #reset webcam
+        os.system("sh /home/pi/retropicam/usbreset/resetwebcam.sh")
     else:
         #User Feedback
         led.on()
