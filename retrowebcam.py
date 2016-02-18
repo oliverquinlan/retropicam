@@ -9,8 +9,13 @@ from datetime import datetime
 import os
 
 #variables
+
+#Length of gif in frames
 length = 4
+#Resolution of gif frames (Higher=Longer processing & upload)
 resolution = "320x240"
+#Number of times to reset webcame driver after shooting (depends on dodgy-ness, my Logitech needs 4 for this to work reliably, sadly this increases time between shots to). For better results use a picamera board.
+resets = 3
 
 #Twython setup
 ### You will need to setup a twitter app on twitter.com and get the authentication details to make this work
@@ -41,7 +46,7 @@ while True:
         print("Button pressed, taking photos...")
         #Take photos
 	filename = "/home/pi/retropicam/photos/photo"
-	#filename = "/home/pi/retropicam/photos/image"+"-"+str(datetime.now()) 
+	date = str(datetime.now()) 
         #Take gif photos
         for num in range (length):
           takephoto = "fswebcam -r "+resolution+" --no-banner"+" "+filename+"-"+str(num)+".jpg"
@@ -53,21 +58,24 @@ while True:
         #makegif
         print("Making gif...")
         os.system("gm convert -delay 15 /home/pi/retropicam/photos/*.jpg /home/pi/retropicam/photos/gif.gif")
-        gifsave = "mv gif.gif /home/pi/retrocam/photos/archive/"+filename+".gif"
+        gifsave = "mv gif.gif /home/pi/retrocam/photos/archive/"+date+".gif"
         os.system(gifsave)
         #Tidy up
         os.system("rm /home/pi/retropicam/photos/*.jpg")
+        
         #tweetgif
         print("Tweeting gif...")
         photo = open('/home/pi/retropicam/photos/gif.gif','rb')
         api.update_status_with_media(media=photo, status='A new Retrocam photo...')
+
         #User feedback
         print("Photo Tweeted!")
         bz.on()
         sleep(0.5)
         bz.off()
         #reset webcam
-        os.system("sh /home/pi/retropicam/usbreset/resetwebcam.sh")
+	for num in range (resets):
+          os.system("sh /home/pi/retropicam/usbreset/resetwebcam.sh")
     else:
         #User Feedback
         led.on()
