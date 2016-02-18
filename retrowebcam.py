@@ -4,6 +4,7 @@
 #setup libraries
 from gpiozero import LED, Button, Buzzer
 from time import sleep
+import time
 from picamera import PiCamera
 from datetime import datetime
 import os
@@ -44,32 +45,40 @@ while True:
         led.blink(0.05,0.05)
         bz.beep(on_time=0.1,off_time=0.1)
         print("Button pressed, taking photos...")
+       
         #Take photos
-	filename = "/home/pi/retropicam/photos/photo"
-	date = str(datetime.now()) 
+        filename = "/home/pi/retropicam/photos/photo"
+        
         #Take gif photos
         for num in range (length):
-          takephoto = "fswebcam -r "+resolution+" --no-banner"+" "+filename+"-"+str(num)+".jpg"
+          date = time.strftime("%d-%m-%Y-%H-%M%S")
+          takephoto = "fswebcam -r "+resolution+" --no-banner"+" "+filename+"-"+date+".jpg"
           os.system(takephoto)
-	#User feedback
+     	#User feedback
         print("Photos Taken")
         led.off()
         bz.off()
         #makegif
         print("Making gif...")
         os.system("gm convert -delay 15 /home/pi/retropicam/photos/*.jpg /home/pi/retropicam/photos/gif.gif")
-        gifsave = "mv gif.gif /home/pi/retrocam/photos/archive/"+date+".gif"
-        os.system(gifsave)
-        #Tidy up
-        os.system("rm /home/pi/retropicam/photos/*.jpg")
         
         #tweetgif
         print("Tweeting gif...")
-        photo = open('/home/pi/retropicam/photos/gif.gif','rb')
-        api.update_status_with_media(media=photo, status='A new Retrocam photo...')
-
-        #User feedback
-        print("Photo Tweeted!")
+        try:
+	        photo = open('/home/pi/retropicam/photos/gif.gif','rb')
+       		api.update_status_with_media(media=photo, status='A new Retrocam photo...')
+       		print("Photo Tweeted!")
+       	except:
+       		print("Tweeting failed, check wifi.")
+       		pass
+       		
+        #Tidy up
+        gifsave = "mv /home/pi/retropicam/photos/gif.gif /home/pi/retropicam/photos/archive/"+date+".gif"
+        os.system(gifsave)
+        os.system("mv "+filename+"-"+date+".jpg /home/pi/retropicam/photos/archive/")
+        os.system("rm /home/pi/retropicam/photos/*.jpg")
+        
+        #User feedback     
         bz.on()
         sleep(0.5)
         bz.off()
